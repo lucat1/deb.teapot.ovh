@@ -1,10 +1,10 @@
 #!/bin/sh -ex
 
 # source common variables
-. $(dirname "$0")/common
+. "$(dirname "$0")/common"
 
 # source environment variables
-. $(dirname "$0")/env
+. "$(dirname "$0")/env"
 
 mkdir -p "$REPOSITORIES_DIR"
 

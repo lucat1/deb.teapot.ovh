@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 # source common variables
-. $(dirname "$0")/common
+. "$(dirname "$0")/common"
 
 # get all git submodules
 PREV_PWD=$(pwd)
@@ -12,5 +12,5 @@ cd "$PREV_PWD"
 # build all packages
 packages=$(ls "$PACKAGES_DIR")
 for package in $packages; do
-  exec "$SCRIPTS_DIR/build" "$package"
+  "$SCRIPTS_DIR/build" "$package"
 done

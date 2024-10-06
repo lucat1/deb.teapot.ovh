@@ -8,7 +8,7 @@ if [ "$package" = "" ]; then
 fi
 
 # source common variables
-. $(dirname "$0")/common
+. "$(dirname "$0")/common"
 
 PACKAGE_DIR="$PACKAGES_DIR/$package"
 
