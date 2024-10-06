@@ -1,0 +1,10 @@
+#!/bin/sh -ex
+
+# source common variables
+. $(dirname "$0")/common
+
+pushd "$BUILD_DIR" > /dev/null
+
+git submodule update --init --recursive
+
+popd > /dev/null
