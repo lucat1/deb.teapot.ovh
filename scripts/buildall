@@ -3,8 +3,9 @@
 # source common variables
 . $(dirname "$0")/common
 
-pushd "$BUILD_DIR" > /dev/null
+PREV_PWD=$(pwd)
+cd "$BUILD_DIR"
 
 git submodule update --init --recursive
 
-popd > /dev/null
+cd "$PREV_PWD"

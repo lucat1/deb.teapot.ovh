@@ -17,8 +17,9 @@ if [ ! -d "$PACKAGE_DIR" ]; then
   exit 2
 fi
 
-pushd "$PACKAGE_DIR" > /dev/null
+PREV_PWD=$(pwd)
+cd "$PACKAGE_DIR"
 
 git describe --tags --abbrev=0 | grep -o -E "(0|[1-9]*)\.(0|[1-9]*)\.(0|[1-9]*)"
 
-popd > /dev/null
+cd "$PREV_PWD"

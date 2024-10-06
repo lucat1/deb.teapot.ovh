@@ -23,8 +23,9 @@ DEBUILD_DIR="$BUILD_DIR/$package-$version"
 
 cp -r "$PACKAGES_DIR/$package" "$DEBUILD_DIR"
 
-pushd "$DEBUILD_DIR" > /dev/null
+PREV_PWD=$(pwd)
+cd "$DEBUILD_DIR"
 
 debuild -i -us -uc -b
 
-popd > /dev/null
+cd "$PREV_PWD"
