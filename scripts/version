@@ -1,0 +1,24 @@
+#!/bin/sh -e
+
+package=$1
+
+if [ "$package" = "" ]; then
+  echo "Missing package name parameter"
+  exit 1
+fi
+
+# source common variables
+. $(dirname "$0")/common
+
+PACKAGE_DIR="$PACKAGES_DIR/$package"
+
+if [ ! -d "$PACKAGE_DIR" ]; then
+  echo "Package '$package' does not exist"
+  exit 2
+fi
+
+pushd "$PACKAGE_DIR" > /dev/null
+
+git describe --tags --abbrev=0 | grep -o -E "(0|[1-9]*)\.(0|[1-9]*)\.(0|[1-9]*)"
+
+popd > /dev/null

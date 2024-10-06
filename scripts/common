@@ -1,0 +1,9 @@
+#!/bin/sh -ex
+
+SCRIPTS_DIR="$(dirname "$0")"
+ROOT_DIR="$(realpath "$SCRIPTS_DIR/..")"
+SCRIPTS_DIR="$ROOT_DIR/scripts"
+PACKAGES_DIR="$ROOT_DIR/packages"
+BUILD_DIR="$ROOT_DIR/build"
+
+# vi: ft=sh

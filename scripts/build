@@ -1,0 +1,30 @@
+#!/bin/sh -ex
+
+package=$1
+
+if [ "$package" = "" ]; then
+  echo "Missing package name parameter"
+  exit 1
+fi
+
+# source common variables
+. $(dirname "$0")/common
+
+if [ ! -d "$PACKAGES_DIR/$package" ]; then
+  echo "Package '$package' does not exist"
+  exit 2
+fi
+
+version=$(exec "$SCRIPTS_DIR/version" "$package")
+
+mkdir -p "$BUILD_DIR"
+
+DEBUILD_DIR="$BUILD_DIR/$package-$version"
+
+cp -r "$PACKAGES_DIR/$package" "$DEBUILD_DIR"
+
+pushd "$DEBUILD_DIR" > /dev/null
+
+debuild -i -us -uc -b
+
+popd > /dev/null

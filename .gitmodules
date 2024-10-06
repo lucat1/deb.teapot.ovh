@@ -1,0 +1,3 @@
+[submodule "packages/autoca"]
+	path = packages/autoca
+	url = https://github.com/lucat1/autoca
