@@ -5,5 +5,6 @@ ROOT_DIR="$(realpath "$SCRIPTS_DIR/..")"
 SCRIPTS_DIR="$ROOT_DIR/scripts"
 PACKAGES_DIR="$ROOT_DIR/packages"
 BUILD_DIR="$ROOT_DIR/build"
+REPOSITORIES_DIR="$ROOT_DIR/repositories"
 
 # vi: ft=sh

@@ -1,0 +1,26 @@
+#!/bin/sh -ex
+
+# source common variables
+. $(dirname "$0")/common
+
+# source environment variables
+. $(dirname "$0")/env
+
+mkdir -p "$REPOSITORIES_DIR"
+
+CONF_DIR="$REPOSITORIES_DIR/conf"
+mkdir -p "$CONF_DIR"
+
+cat << EOF > "$CONF_DIR/options"
+verbose
+basedir $REPOSITORIES_DIR
+EOF
+
+cat << EOF > "$CONF_DIR/distributions"
+Codename: $DEBIAN_CODENAME
+Components: main
+Architectures: amd64
+SignWith: $GPG_KEY
+EOF
+
+reprepro -b "$REPOSITORIES_DIR" includedeb "$DEBIAN_CODENAME" "$BUILD_DIR"/*.deb

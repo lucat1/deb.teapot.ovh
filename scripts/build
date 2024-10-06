@@ -1,4 +1,4 @@
-#!/bin/sh -ex
+#!/bin/sh -e
 
 package=$1
 
@@ -16,6 +16,8 @@ if [ ! -d "$PACKAGES_DIR/$package" ]; then
 fi
 
 version=$(exec "$SCRIPTS_DIR/version" "$package")
+
+echo "==> Building $package version $version"
 
 mkdir -p "$BUILD_DIR"
 
