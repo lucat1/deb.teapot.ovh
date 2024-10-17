@@ -22,16 +22,18 @@ jobs:
           apt install -y git
 
       - uses: actions/checkout@v3
-        # with:
-        #   submodules: true
 
       - name: Install dependencies
-        run: apt install -y devscripts build-essential lintian
+        run: apt install -y devscripts build-essential lintian reprepro
 
       - name: Compile all packages
         run: |
           git config --global --add safe.directory $(pwd)
           ./scripts/buildall
+
+      - name: Generate reprepro repository
+        run: |
+          ./scripts/reprepro
 
       - name: Regenerate Debian repository
         run: rm -rf repositories/**/*.html && ./scripts/buildall
