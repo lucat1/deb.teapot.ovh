@@ -1,0 +1,98 @@
+name: Update Debian repository
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    # permissions:
+    #   contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    container:
+      image: "debian:bookworm"
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: apt update && apt install -y git build-essential
+
+      - name: Compile all packages
+        run: ./scripts/buildall
+
+      - name: Regenerate Debian repository
+        run: rm -rf repositories/**/*.html && ./scripts/buildall
+
+      - name: Store repositories/ as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: repositories
+          path: repositories
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-22.04
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: repositories
+          path: repositories
+
+      - name: Build website listing
+        uses: addnab/docker-run-action@v3
+        with:
+          registry: gcr.io
+          image: "lucat1/statik:v0.7.0"
+          options: -v ${{ github.workspace }}:/repo
+          run: |
+            /usr/bin/statik --json false -e "(\\.git(hub)?)|(\\w+.html)|conf|db" /repo/repositories /repo/website
+
+      - name: Store website as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: website
+          path: website
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: website
+
+  store:
+    needs: build
+    runs-on: ubuntu-22.04
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    environment:
+      name: backup
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: repositories
+          path: repositories
+
+      - name: Tar the repositories/ folder
+        run: tar czf backup.tar.gz repositories/
+
+      - name: Store website as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup
+          path: backup.tar.gz
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: repositories
