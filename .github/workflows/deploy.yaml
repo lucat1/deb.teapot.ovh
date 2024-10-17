@@ -23,7 +23,7 @@ jobs:
           apt update
           apt install -y git
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: apt install -y devscripts build-essential lintian reprepro
@@ -66,13 +66,23 @@ jobs:
           name: repositories
           path: repositories
 
-      - name: Build website listing
-        uses: addnab/docker-run-action@v3
+      - uses: actions/setup-go@v5
         with:
-          image: "ghcr.io/lucat1/statik:v0.7.0"
-          options: -v ${{ github.workspace }}:/repo
-          run: |
-            /usr/bin/statik --json false -e "(\\.git(hub)?)|(\\w+.html)|conf|db" /repo/repositories /repo/website
+          go-version: '1.18'
+          check-latest: true
+          cache-dependency-path: "**/*.sum"
+
+      - name: Install statik
+        run: go install github.com/lucat1/statik@latest
+
+      - name: Generate static directory listing
+        run: >
+            $(go env GOPATH)/bin/statik
+            -l
+            -b "https://${{ github.event.repository.owner.name }}.github.io/${{ github.event.repository.name }}/"
+            -e "conf|db"
+            repositories
+            website
 
       - name: Store website as artifact
         uses: actions/upload-artifact@v4
