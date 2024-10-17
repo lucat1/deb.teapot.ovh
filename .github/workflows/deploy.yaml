@@ -69,7 +69,7 @@ jobs:
       - name: Build website listing
         uses: addnab/docker-run-action@v3
         with:
-          image: "gcr.io/lucat1/statik:v0.7.0"
+          image: "ghcr.io/lucat1/statik:v0.7.0"
           options: -v ${{ github.workspace }}:/repo
           run: |
             /usr/bin/statik --json false -e "(\\.git(hub)?)|(\\w+.html)|conf|db" /repo/repositories /repo/website
