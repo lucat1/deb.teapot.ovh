@@ -16,13 +16,22 @@ jobs:
     container:
       image: "debian:bookworm"
     steps:
+      - name: Install git
+        run: |
+          apt update
+          apt install -y git
+
       - uses: actions/checkout@v3
+        # with:
+        #   submodules: true
 
       - name: Install dependencies
-        run: apt update && apt install -y git build-essential
+        run: apt install -y devscripts build-essential lintian
 
       - name: Compile all packages
-        run: ./scripts/buildall
+        run: |
+          git config --global --add safe.directory $(pwd)
+          ./scripts/buildall
 
       - name: Regenerate Debian repository
         run: rm -rf repositories/**/*.html && ./scripts/buildall

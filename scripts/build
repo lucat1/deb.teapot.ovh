@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -ex
 
 package=$1
 
@@ -27,6 +27,8 @@ cp -r "$PACKAGES_DIR/$package" "$DEBUILD_DIR"
 
 PREV_PWD=$(pwd)
 cd "$DEBUILD_DIR"
+
+mk-build-deps -i -t "apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends -y"
 
 debuild -i -us -uc -b
 

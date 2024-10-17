@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh -ex
 
 # source common variables
 . "$(dirname "$0")/common"
