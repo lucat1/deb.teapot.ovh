@@ -44,9 +44,6 @@ jobs:
         run: |
           ./scripts/reprepro
 
-      - name: Regenerate Debian repository
-        run: rm -rf repositories/**/*.html && ./scripts/buildall
-
       - name: Store repositories/ as an artifact
         uses: actions/upload-artifact@v4
         with:
@@ -72,8 +69,7 @@ jobs:
       - name: Build website listing
         uses: addnab/docker-run-action@v3
         with:
-          registry: gcr.io
-          image: "lucat1/statik:v0.7.0"
+          image: "gcr.io/lucat1/statik:v0.7.0"
           options: -v ${{ github.workspace }}:/repo
           run: |
             /usr/bin/statik --json false -e "(\\.git(hub)?)|(\\w+.html)|conf|db" /repo/repositories /repo/website
@@ -117,4 +113,4 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: repositories
+          artifact_name: backup
