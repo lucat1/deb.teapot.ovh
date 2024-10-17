@@ -15,6 +15,8 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
     container:
       image: "debian:bookworm"
+    environment:
+      name: build
     steps:
       - name: Install git
         run: |
@@ -30,6 +32,13 @@ jobs:
         run: |
           git config --global --add safe.directory $(pwd)
           ./scripts/buildall
+
+      # https://stackoverflow.com/a/61748039
+      - name: Setup the GPG key
+        run: |
+          echo -n "$GPG_KEY" | gpg --armor --import
+        env:
+          GPG_KEY: ${{ secrets.GPG_KEY }}
 
       - name: Generate reprepro repository
         run: |
@@ -52,6 +61,8 @@ jobs:
       id-token: write
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
+    environment:
+      name: website
     steps:
       - uses: actions/download-artifact@v4
         with:
