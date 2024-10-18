@@ -6,6 +6,9 @@ on:
       - main
   pull_request:
 
+env:
+  REPO_URL: "https://deb.teapot.ovh"
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -39,6 +42,11 @@ jobs:
           echo -n "$GPG_KEY" | gpg --armor --import
         env:
           GPG_KEY: ${{ secrets.GPG_KEY }}
+
+      - name: Get the previous repository
+        run: |
+          wget "$REPO_URL/backup.tar.gz"
+          tar xfz backup.tar.gz
 
       - name: Generate reprepro repository
         run: |
@@ -83,7 +91,7 @@ jobs:
         run: >
             $(go env GOPATH)/bin/statik
             -l
-            -b "https://lucat1.github.io/teapot-repo/"
+            -b "$REPO_URL"
             -e "conf|db"
             repositories
             website
