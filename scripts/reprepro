@@ -23,4 +23,7 @@ Architectures: amd64
 SignWith: $GPG_KEY
 EOF
 
+gpg --export "$GPG_KEY" > "$REPOSITORIES_DIR/key.gpg"
+gpg --armor --export "$GPG_KEY" > "$REPOSITORIES_DIR/key.asc"
+
 reprepro -b "$REPOSITORIES_DIR" includedeb "$DEBIAN_CODENAME" "$BUILD_DIR"/*.deb
