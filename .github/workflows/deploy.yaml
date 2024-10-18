@@ -92,12 +92,13 @@ jobs:
         run: mv backup.tar.gz website
 
       - name: Store website as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
           name: website
           path: website
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+        id: deployment
         with:
           artifact_name: website
