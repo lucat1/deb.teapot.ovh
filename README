@@ -1,0 +1,2 @@
+To update packages in the repository:
+$ git submodule update --recursive --remote
